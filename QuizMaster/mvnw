@@ -1,0 +1,4 @@
+#!/bin/sh
+# Maven Wrapper startup script for Unix
+# This is a simplified version - use mvn directly if issues occur
+exec mvn "$@"

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Concurrency Demo - QuizMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        button, .btn {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+        .btn-secondary {
+            background: #ffc107;
+            color: black;
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+        button:hover, .btn:hover {
+            opacity: 0.8;
+        }
+        .message {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+        }
+        .results {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .quiz-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1> Concurrency Demo </h1>
+
+    <p style="text-align: center; font-size: 18px;">
+        Compare concurrent (parallel) vs sequential (one-by-one) quiz loading
+    </p>
+
+    <div class="buttons">
+        <a href="/concurrency/load-concurrent" class="btn btn-primary">
+            ⚡ Load Concurrent (Fast)
+        </a>
+        <a href="/concurrency/load-sequential" class="btn btn-secondary">
+            🐌 Load Sequential (Slow)
+        </a>
+    </div>
+
+    <div th:if="${message}" class="message">
+        <strong th:text="${message}">Message</strong>
+    </div>
+
+    <div th:if="${method}" class="results">
+        <h3>Results:</h3>
+        <p><strong>Method:</strong> <span th:text="${method}"></span></p>
+        <p><strong>Duration:</strong> <span th:text="${duration} + 'ms'"></span></p>
+        <p><strong>Quizzes Loaded:</strong> <span th:text="${quizzes.size()}"></span></p>
+
+        <h4>Loaded Quizzes:</h4>
+        <div th:each="quiz : ${quizzes}" class="quiz-item">
+            <strong th:text="${quiz.title}">Quiz Title</strong> -
+            <span th:text="${quiz.questionCount} + ' questions'">3 questions</span>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/web/quizzes" class="btn btn-back">← Back to Quizzes</a>
+    </div>
+</div>
+</body>
+</html>

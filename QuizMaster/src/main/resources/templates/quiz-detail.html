@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${quiz.title} + ' - Details'">Quiz Details</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+        }
+        h1 { color: #667eea; margin-bottom: 20px; }
+        .quiz-meta {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .meta-item:last-child { border-bottom: none; }
+        .question-list {
+            margin-top: 30px;
+        }
+        .question-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #764ba2; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a th:href="@{/web/quizzes}">← Back to Quizzes</a>
+        </nav>
+        
+        <h1 th:text="${quiz.title}">Quiz Title</h1>
+        <p th:text="${quiz.description}">Description</p>
+        
+        <div class="quiz-meta">
+            <div class="meta-item">
+                <strong>Questions:</strong>
+                <span th:text="${quiz.questionCount}">0</span>
+            </div>
+            <div class="meta-item">
+                <strong>Total Points:</strong>
+                <span th:text="${quiz.totalPoints}">0</span>
+            </div>
+            <div class="meta-item">
+                <strong>Time Limit:</strong>
+                <span th:text="${quiz.timeLimit > 0} ? ${quiz.timeLimit} + ' minutes' : 'No limit'"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Created:</strong>
+                <span th:text="${#temporals.format(quiz.createdAt, 'MMM dd, yyyy HH:mm')}"></span>
+            </div>
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <a th:href="@{/web/quiz/{id}/take(id=${quiz.id})}" class="btn btn-success">Take This Quiz</a>
+            <a th:href="@{/web/quizzes}" class="btn">Back to List</a>
+        </div>
+        
+        <div class="question-list">
+            <h2 style="margin-bottom: 20px; color: #667eea;">Questions Preview</h2>
+            <div th:each="question, iterStat : ${quiz.questions}" class="question-item">
+                <strong>Q<span th:text="${iterStat.count}"></span>:</strong>
+                <span th:text="${question.questionText}"></span>
+                <div style="margin-top: 10px; color: #666;">
+                    <span th:text="${question.answers.size()} + ' options'"></span> • 
+                    <span th:text="${question.points} + ' points'"></span> • 
+                    <span th:text="${question.difficulty}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

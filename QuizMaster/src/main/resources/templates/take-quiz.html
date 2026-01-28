@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${quiz.title} + ' - QuizMaster'">Take Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+        }
+        
+        .quiz-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            color: #666;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .question-number {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .question-points {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .question-text {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .answer-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .answer-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .answer-option input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .answer-option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 1.05em;
+        }
+        
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #764ba2;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .difficulty-EASY {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .difficulty-MEDIUM {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .difficulty-HARD {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        nav {
+            margin-bottom: 20px;
+        }
+        
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a th:href="@{/web/quizzes}">← Back to Quizzes</a>
+        </nav>
+        
+        <div class="quiz-header">
+            <h1 th:text="${quiz.title}">Quiz Title</h1>
+            <p th:text="${quiz.description}">Quiz Description</p>
+            <div class="quiz-info">
+                <span>📝 <span th:text="${quiz.questionCount}"></span> Questions</span>
+                <span>⭐ <span th:text="${quiz.totalPoints}"></span> Points</span>
+                <span th:if="${quiz.timeLimit > 0}">
+                    ⏱️ <span th:text="${quiz.timeLimit}"></span> Minutes
+                </span>
+            </div>
+        </div>
+        
+        <form th:action="@{/web/quiz/{id}/submit(id=${quiz.id})}" method="post">
+            <div th:each="question, iterStat : ${quiz.questions}" class="question-container">
+                <div class="question-header">
+                    <span class="question-number" 
+                          th:text="'Question ' + ${iterStat.count}">Question 1</span>
+                    <span>
+                        <span class="question-points" 
+                              th:text="${question.points} + ' pts'"></span>
+                        <span class="difficulty-badge" 
+                              th:classappend="'difficulty-' + ${question.difficulty}"
+                              th:text="${question.difficulty}">MEDIUM</span>
+                    </span>
+                </div>
+                
+                <div class="question-text" th:text="${question.questionText}">
+                    Question text goes here
+                </div>
+                
+                <div class="answers">
+                    <div th:each="answer : ${question.answers}" class="answer-option">
+                        <input type="radio" 
+                               th:id="'answer_' + ${answer.id}"
+                               th:name="'question_' + ${question.id}"
+                               th:value="${answer.id}"
+                               required>
+                        <label th:for="'answer_' + ${answer.id}" 
+                               th:text="${answer.answerText}">Answer text</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="submit-section">
+                <button type="submit" class="btn">Submit Quiz</button>
+                <a th:href="@{/web/quizzes}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

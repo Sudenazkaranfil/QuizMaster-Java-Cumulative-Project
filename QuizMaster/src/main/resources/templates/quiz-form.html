@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Quiz - QuizMaster</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+        }
+        h1 { color: #667eea; margin-bottom: 30px; text-align: center; }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .btn {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #764ba2; }
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+        .btn-secondary:hover { background: #5a6268; }
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+        .info-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a th:href="@{/web/quizzes}">← Back to Quizzes</a>
+        </nav>
+        
+        <h1>📝 Create New Quiz</h1>
+        
+        <form th:action="@{/web/quiz/create}" method="post" th:object="${quiz}">
+            <div class="form-group">
+                <label for="title">Quiz Title *</label>
+                <input type="text" 
+                       id="title" 
+                       name="title" 
+                       th:field="*{title}"
+                       placeholder="Enter a descriptive title for your quiz"
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" 
+                          name="description" 
+                          th:field="*{description}"
+                          placeholder="Describe what this quiz is about..."></textarea>
+                <div class="info-text">Optional: Provide context for quiz takers</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="timeLimit">Time Limit (minutes)</label>
+                <input type="number" 
+                       id="timeLimit" 
+                       name="timeLimit" 
+                       th:field="*{timeLimit}"
+                       min="0" 
+                       value="0"
+                       placeholder="0">
+                <div class="info-text">Set to 0 for no time limit</div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn">Create Quiz</button>
+                <a th:href="@{/web/quizzes}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 6px;">
+            <p><strong>Note:</strong> After creating the quiz, you'll need to add questions through the database or desktop application. Future versions will support adding questions directly in the web interface.</p>
+        </div>
+    </div>
+</body>
+</html>
